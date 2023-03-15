@@ -42,6 +42,7 @@
                 Grid.Row="1"
                 Grid.Column="2"/>
         <Button x:Name="divisionButton"
+                Click="OperationButton_Click"
                 Content="/"
                 Margin="5"
                 Grid.Row="1"
@@ -63,7 +64,8 @@
                 Margin="5"
                 Grid.Row="2"
                 Grid.Column="2"/>
-        <Button x:Name="multiplyButton" 
+        <Button x:Name="multiplicationButton" 
+                Click="OperationButton_Click"
                 Content="*"
                 Margin="5"
                 Grid.Row="2"
@@ -86,6 +88,7 @@
                 Grid.Row="3"
                 Grid.Column="2"/>
         <Button x:Name="minusButton" 
+                Click="OperationButton_Click"
                 Content="-"
                 Margin="5"
                 Grid.Row="3"
@@ -108,6 +111,7 @@
                 Grid.Row="4"
                 Grid.Column="2"/>
         <Button x:Name="plusButton"
+                Click="OperationButton_Click"
                 Content="+"
                 Margin="5"
                 Grid.Row="4"
@@ -119,6 +123,7 @@
                 Grid.Row="5"
                 Grid.ColumnSpan="2"/>
         <Button x:Name="dotButton"
+                Click="dotButton_Click"
                 Content="."
                 Margin="5"
                 Grid.Row="5"

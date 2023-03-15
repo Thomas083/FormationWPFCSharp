@@ -21,6 +21,7 @@ namespace Calculator
 	public partial class MainWindow : Window
 	{
 		double lastNumber, result;
+		SelectedOperator selectedOperator;
 
 		public MainWindow()
 		{
@@ -34,7 +35,28 @@ namespace Calculator
 
 		private void EqualButton_Click(object sender, RoutedEventArgs e)
 		{
-			
+			double newNumber;
+
+			if (double.TryParse(resultLabel.Content.ToString(), out newNumber))
+			{
+				switch(selectedOperator)
+				{
+					case SelectedOperator.Addition:
+						result = SimpleMath.Add(lastNumber, newNumber);
+						break;
+					case SelectedOperator.Sustraction: 
+						result = SimpleMath.Sustraction(lastNumber, newNumber);
+						break;
+					case SelectedOperator.Multiplication:
+						result = SimpleMath.Multiply(lastNumber, newNumber);
+						break;
+					case SelectedOperator.Division:
+						result = SimpleMath.Divide(lastNumber, newNumber);
+						break;
+				}
+
+				resultLabel.Content = result.ToString();
+			}
 		}
 
 		private void PercentageButton_Click(object sender, RoutedEventArgs e)
@@ -74,12 +96,57 @@ namespace Calculator
 			}
 		}
 
+		private void dotButton_Click(object sender, RoutedEventArgs e)
+		{
+			if(!resultLabel.Content.ToString().Contains(","))
+			{
+				resultLabel.Content = $"{resultLabel.Content},";
+			}
+			//Else do nothing
+		}
+
 		private void OperationButton_Click(object sender, RoutedEventArgs e)
 		{
 			if (double.TryParse(resultLabel.Content.ToString(), out lastNumber))
 			{
 				resultLabel.Content = "0";
 			}
+
+			if (sender == multiplicationButton) selectedOperator = SelectedOperator.Multiplication;
+			if (sender == divisionButton) selectedOperator = SelectedOperator.Division;
+			if (sender == plusButton) selectedOperator = SelectedOperator.Addition;
+			if (sender == minusButton) selectedOperator = SelectedOperator.Sustraction;
+		}
+	}
+
+	public enum SelectedOperator
+	{
+		Addition,
+		Sustraction,
+		Multiplication,
+		Division,
+	}
+
+	public class SimpleMath
+	{
+		public static double Add(double n1, double n2)
+		{
+			return n1 + n2;
+		}
+
+		public static double Sustraction(double n1, double n2)
+		{
+			return n1 - n2;
+		}
+
+		public static double Multiply(double n1, double n2)
+		{
+			return n1 * n2;
+		}
+
+		public static double Divide(double n1, double n2)
+		{
+			return n1 / n2;
 		}
 	}
 }
