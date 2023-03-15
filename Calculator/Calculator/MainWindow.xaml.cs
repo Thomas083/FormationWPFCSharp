@@ -23,8 +23,18 @@ namespace Calculator
 		public MainWindow()
 		{
 			InitializeComponent();
+		}
 
-			resultLabel.Content = "14321";
+		private void sevenButton_Click(object sender, RoutedEventArgs e)
+		{
+			if(resultLabel.Content.ToString() == "0")
+			{
+				resultLabel.Content = "7";
+			}
+			else
+			{
+				resultLabel.Content = $"{resultLabel.Content}7";
+			}
 		}
 	}
 }
