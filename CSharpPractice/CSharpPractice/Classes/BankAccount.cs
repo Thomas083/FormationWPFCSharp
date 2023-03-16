@@ -13,7 +13,7 @@ namespace CSharpPractice.Classes
 		{
 			get 
 			{ 
-				if (Balance < 1000000)
+				if (balance < 1000000)
 				{
 					return balance;
 				}
@@ -26,13 +26,18 @@ namespace CSharpPractice.Classes
 			{
 				if (value > 0)
 				{
-					Balance = value;
+					balance = value;
 				} 
 				else
 				{
-					Balance = 0;
+					balance = 0;
 				}
 			}
+		}
+
+		public BankAccount()
+		{
+			Balance = 100;
 		}
 
 		public double AddToBalance(double balanceToBeAdded)
