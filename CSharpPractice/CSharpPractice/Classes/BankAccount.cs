@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CSharpPractice.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CSharpPractice.Classes
 {
-	public class BankAccount
+	public class BankAccount : IInformation
 	{
 		private double balance;
 		public double Balance
@@ -49,6 +50,11 @@ namespace CSharpPractice.Classes
 		{
 			Balance += balanceToBeAdded;
 			return Balance;
+		}
+
+		public string GetInformation()
+		{
+			return $"Your current balance is : {Balance:n}";
 		}
 	}
 
