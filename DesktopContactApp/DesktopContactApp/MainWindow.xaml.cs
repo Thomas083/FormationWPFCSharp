@@ -1,6 +1,9 @@
 ﻿using DesktopContactApp.Classes;
 using SQLite;
+using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace DesktopContactApp
 {
@@ -26,10 +29,16 @@ namespace DesktopContactApp
 
 		void ReadDatabase()
 		{
+			List<Contact> contacts;
 			using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
 			{
 				conn.CreateTable<Contact>();
-				var contacts = conn.Table<Contact>().ToList(); 
+				contacts = conn.Table<Contact>().ToList(); 
+			}
+
+			if (contacts != null)
+			{
+				contactsListView.ItemsSource = contacts;
 			}
 		}
 	}
