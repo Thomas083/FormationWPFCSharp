@@ -15,5 +15,10 @@ namespace DesktopContactApp.Classes
         public string Email { get; set; }
         [Unique]
         public string Phone { get; set; }
-    }
+
+		public override string ToString()
+		{
+            return $"{Name} -  {Email} - {Phone}";
+		}
+	}
 }
