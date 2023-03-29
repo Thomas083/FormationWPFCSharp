@@ -36,7 +36,7 @@ namespace DesktopContactApp
 			using (SQLiteConnection conn = new SQLiteConnection(App.databasePath))
 			{
 				conn.CreateTable<Contact>();
-				contacts = conn.Table<Contact>().ToList(); 
+				contacts = conn.Table<Contact>().ToList().OrderBy(contact => contact.Name).ToList(); 
 			}
 
 			if (contacts != null)
