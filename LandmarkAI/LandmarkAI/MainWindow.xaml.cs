@@ -57,6 +57,8 @@ namespace LandmarkAI
 				{
 					content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
 					var response = await client.PostAsync(url, content);
+
+					var responseString = await response.Content.ReadAsStringAsync();
 				}
 			}
 		}
