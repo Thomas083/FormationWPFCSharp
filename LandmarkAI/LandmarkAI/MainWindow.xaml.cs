@@ -63,6 +63,7 @@ namespace LandmarkAI
 					var responseString = await response.Content.ReadAsStringAsync();
 
 					List<Prediction> predictions = (JsonConvert.DeserializeObject<CustomVision>(responseString)).Predictions;
+					predictionsListView.ItemsSource = predictions;
 				}
 			}
 		}
