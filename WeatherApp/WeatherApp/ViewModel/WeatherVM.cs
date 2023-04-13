@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WeatherApp.Model;
+using WeatherApp.ViewModel.Helpers;
 
 namespace WeatherApp.ViewModel
 {
@@ -67,6 +68,11 @@ namespace WeatherApp.ViewModel
 					}
 				};
 			}
+		}
+
+		public async void MakeQuery()
+		{
+			var cities = await AccuWeatherHelper.GetCities(Query);
 		}
 		public event PropertyChangedEventHandler PropertyChanged;
 
