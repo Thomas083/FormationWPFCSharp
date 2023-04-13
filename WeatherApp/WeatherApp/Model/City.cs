@@ -11,7 +11,7 @@ namespace WeatherApp.Model
 		public string ID { get; set; }
 		public string LocalizedName { get; set; }
 	}
-	internal class City
+	public class City
 	{
 		public int Version { get; set; }
 		public string Key { get; set; }
