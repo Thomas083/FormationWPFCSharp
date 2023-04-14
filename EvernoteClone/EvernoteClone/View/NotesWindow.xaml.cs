@@ -19,9 +19,14 @@ namespace EvernoteClone.View
 	/// </summary>
 	public partial class NotesWindow : Window
 	{
-		public NotesWindow()
+	public NotesWindow()
 		{
 			InitializeComponent();
 		}
-	}
+
+		private void MenuItem_Click(object sender, RoutedEventArgs e)
+		{
+			Application.Current.Shutdown();
+        }
+    }
 }
