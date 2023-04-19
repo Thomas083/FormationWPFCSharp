@@ -33,5 +33,17 @@ namespace EvernoteClone.View
         {
 
         }
+
+        private void contentRichTexBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+			int ammountCharacters = (new TextRange(contentRichTexBox.Document.ContentStart, contentRichTexBox.Document.ContentEnd)).Text.Length;
+			statusTextblock.Text = $"Document length: {ammountCharacters} character";
+
+		}
+
+        private void boldButton_Click(object sender, RoutedEventArgs e)
+        {
+			contentRichTexBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Bold);
+        }
     }
 }
