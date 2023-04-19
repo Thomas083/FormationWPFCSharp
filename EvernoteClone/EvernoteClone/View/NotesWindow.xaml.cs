@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.CognitiveServices.Speech;
+using Microsoft.CognitiveServices.Speech.Audio;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace EvernoteClone.View
 {
@@ -29,9 +21,20 @@ namespace EvernoteClone.View
 			Application.Current.Shutdown();
         }
 
-        private void SpeechButton_Click(object sender, RoutedEventArgs e)
+        private async void SpeechButton_Click(object sender, RoutedEventArgs e)
         {
+			string region = "francecentral";
+			string key = "748a880044b0469fb33b505aa39d5c36";
 
+			var speechConfig = SpeechConfig.FromSubscription(key, region);
+			using(var audioConfig = AudioConfig.FromDefaultSpeakerOutput())
+			{
+				using (var recognizer = new SpeechRecognizer(speechConfig, audioConfig))
+				{
+					var result = await recognizer.RecognizeOnceAsync();
+					contentRichTexBox.Document.Blocks.Add(new Paragraph(new Run(result.Text)));
+				}
+			}
         }
 
         private void contentRichTexBox_TextChanged(object sender, TextChangedEventArgs e)
