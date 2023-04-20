@@ -2,6 +2,7 @@
 using Microsoft.CognitiveServices.Speech.Audio;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 
 namespace EvernoteClone.View
@@ -46,7 +47,20 @@ namespace EvernoteClone.View
 
         private void boldButton_Click(object sender, RoutedEventArgs e)
         {
-			contentRichTexBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Bold);
+			bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
+			if(isButtonChecked)
+			{
+				contentRichTexBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Bold);
+			} else
+			{
+				contentRichTexBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Normal);
+			}
         }
-    }
+
+		private void contentRichTexBox_SelectionChanged(object sender, RoutedEventArgs e)
+		{
+			var selectedWeight = contentRichTexBox.Selection.GetPropertyValue(FontWeightProperty);
+			boldButton.IsChecked = (selectedWeight != DependencyProperty.UnsetValue) && (selectedWeight.Equals(FontWeights.Bold));
+		}
+	}
 }
