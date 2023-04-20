@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace EvernoteClone.ViewModel
 {
@@ -27,22 +28,36 @@ namespace EvernoteClone.ViewModel
 			}
 		}
 
+		private Visibility isVisible;
+
+		public Visibility IsVisible
+		{
+			get { return isVisible; }
+			set 
+			{ 
+				isVisible = value; 
+				OnPropertyChanged("IsVisible");
+			}
+		}
 
 		public NewNotebookCommand NewNotebookCommand { get; set; }
 		public NewNoteCommand NewNoteCommand { get; set; }
+		public EditCommand EditCommand { get; set; }
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
         public NotesVM()
 		{
 			NewNotebookCommand = new NewNotebookCommand(this);
-			NewNoteCommand= new NewNoteCommand(this);
+			NewNoteCommand = new NewNoteCommand(this);
+			EditCommand = new EditCommand(this);
 
 			Notebooks = new ObservableCollection<Notebook>();
 			Notes = new ObservableCollection<Note>();
 
-			GetNotebooks();
+			IsVisible = Visibility.Collapsed;
 
+			GetNotebooks();
 		}
 
 		public void CreateNotebook()
@@ -98,6 +113,11 @@ namespace EvernoteClone.ViewModel
 		private void OnPropertyChanged(string propertyName)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		public void StartEditing()
+		{
+			IsVisible = Visibility.Visible;
 		}
 	}
 }
