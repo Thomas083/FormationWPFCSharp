@@ -1,6 +1,10 @@
-﻿using Microsoft.CognitiveServices.Speech;
+﻿using EvernoteClone.ViewModel;
+using EvernoteClone.ViewModel.Helpers;
+using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,9 +19,13 @@ namespace EvernoteClone.View
 	/// </summary>
 	public partial class NotesWindow : Window
 	{
-	public NotesWindow()
+		NotesVM viewModel;
+		public NotesWindow()
 		{
 			InitializeComponent();
+
+			viewModel = Resources["vm"] as NotesVM;
+			viewModel.SelectedNoteChanged += ViewModel_SelectedNoteChanged;
 
 			var fontFamilies = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
 			fontFamilyComboBox.ItemsSource = fontFamilies;
@@ -28,6 +36,20 @@ namespace EvernoteClone.View
 			};
 
 			fontSizeCombobox.ItemsSource = fontSizes;
+		}
+
+		private void ViewModel_SelectedNoteChanged(object? sender, EventArgs e)
+		{
+			contentRichTexBox.Document.Blocks.Clear();
+			if(viewModel.SelectedNote != null)
+			{
+				if(!string.IsNullOrEmpty(viewModel.SelectedNote.FileLocation))
+				{
+					FileStream fileStream = new FileStream(viewModel.SelectedNote.FileLocation, FileMode.Open);
+					var contents = new TextRange(contentRichTexBox.Document.ContentStart, contentRichTexBox.Document.ContentEnd);
+					contents.Load(fileStream, DataFormats.Rtf);
+				}
+			}
 		}
 
 		private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -126,6 +148,18 @@ namespace EvernoteClone.View
 
 			fontFamilyComboBox.SelectedItem = contentRichTexBox.Selection.GetPropertyValue(Inline.FontFamilyProperty);
 			fontSizeCombobox.Text = (contentRichTexBox.Selection.GetPropertyValue(Inline.FontSizeProperty)).ToString();
+		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			string rtfFile = Path.Combine(Environment.CurrentDirectory, $"{viewModel.SelectedNote.Id}.rtf");
+			viewModel.SelectedNote.FileLocation = rtfFile;
+			DatabaseHelper.Update(viewModel.SelectedNote);
+
+			FileStream fileStream = new FileStream(rtfFile, FileMode.Create);
+			var contents = new TextRange(contentRichTexBox.Document.ContentStart, contentRichTexBox.Document.ContentEnd);
+			contents.Save(fileStream, DataFormats.Rtf);
+
 		}
 	}
 }
