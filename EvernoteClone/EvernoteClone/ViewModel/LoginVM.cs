@@ -75,6 +75,15 @@ namespace EvernoteClone.ViewModel
             }
         }
 
+        public void Login()
+        {
+            //TODO: login
+        }
+        public void Register()
+        {
+            //TODO: Register
+        }
+
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
