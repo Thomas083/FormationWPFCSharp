@@ -77,7 +77,7 @@ namespace EvernoteClone.ViewModel
 
         public void Login()
         {
-            //TODO: login
+            //TODO: login 
         }
         public void Register()
         {
