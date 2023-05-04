@@ -7,12 +7,13 @@ using System.Windows.Input;
 
 namespace EvernoteClone.ViewModel.Commands
 {
-	public class LoginCommand : ICommand
-	{
+	public class ShowRegisterCommand : ICommand
+    {
         public LoginVM ViewModel { get; set; }
+
         public event EventHandler CanExecuteChanged;
 
-        public LoginCommand(LoginVM vm)
+        public ShowRegisterCommand(LoginVM vm)
         {
             ViewModel = vm;
         }
@@ -24,7 +25,7 @@ namespace EvernoteClone.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            //TODO: Call login from ViewModel
+            ViewModel.SwitchViews();
         }
     }
 }
