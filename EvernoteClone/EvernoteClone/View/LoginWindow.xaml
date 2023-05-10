@@ -16,13 +16,13 @@
     <Grid DataContext="{StaticResource vm}">
         <StackPanel Visibility="{Binding LoginVis}"
                     Margin="10">
-            <TextBlock Text="Username : "/>
-            <TextBox Text="{Binding User.Username, Mode=TwoWay}"/>
-            <TextBlock Text="Paswword : "/>
-            <TextBox Text="{Binding User.Password, Mode=TwoWay}"/>
+            <TextBlock Text="Username:"/>
+            <TextBox Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="Password:"/>
+            <TextBox Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Command="{Binding LoginCommand}"
-                    Margin="0,5"
                     CommandParameter="{Binding User}"
+                    Margin="0,5"
                     Content="Login"/>
             <TextBlock Text="Register"
                        Foreground="DodgerBlue"
@@ -35,17 +35,17 @@
             </TextBlock>
         </StackPanel>
         <StackPanel Visibility="{Binding RegisterVis}"
-                    Margin="10">
-            <TextBlock Text="Username : "/>
-            <TextBox Text="{Binding User.Username, Mode=TwoWay}"/>
-            <TextBlock Text="Name : "/>
-            <TextBox Text="{Binding User.Name, Mode=TwoWay}"/>
-            <TextBlock Text="Lastname : "/>
-            <TextBox Text="{Binding User.LastName, Mode=TwoWay}"/>
-            <TextBlock Text="Paswword : "/>
-            <TextBox Text="{Binding User.Password, Mode=TwoWay}"/>
-            <TextBlock Text="Confirm Paswword : "/>
-            <TextBox Text="{Binding User.ConfirmPassword, Mode=TwoWay}"/>
+                    Margin="10,0">
+            <TextBlock Text="Username:"/>
+            <TextBox Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="Name:"/>
+            <TextBox Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="Lastname:"/>
+            <TextBox Text="{Binding Lastname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="Password:"/>
+            <TextBox Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="Confirm password:"/>
+            <TextBox Text="{Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Command="{Binding RegisterCommand}"
                     CommandParameter="{Binding User}"
                     Margin="0,5"
