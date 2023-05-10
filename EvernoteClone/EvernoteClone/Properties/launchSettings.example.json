@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "EvernoteClone": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "API_KEY": "Firebase Api KEy"
+      }
+    }
+  }
+}
