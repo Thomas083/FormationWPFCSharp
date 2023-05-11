@@ -13,193 +13,194 @@ namespace EvernoteClone.ViewModel
 {
 	public class LoginVM : INotifyPropertyChanged
     {
-        private bool isShowingRegister = false;
+		private bool isShowingRegister = false;
 
-        private User user;
-        public User User
-        {
-            get { return user; }
-            set
-            {
-                user = value;
-                OnPropertyChanged("User");
-            }
-        }
+		private User user;
+		public User User
+		{
+			get { return user; }
+			set
+			{
+				user = value;
+				OnPropertyChanged("User");
+			}
+		}
 
-        private string username;
-        public string Username
-        {
-            get { return username; }
-            set
-            {
-                username = value;
-                User = new User
-                {
-                    Username = username,
-                    Password = this.Password,
-                    Name = this.Name,
-                    Lastname = this.Lastname,
-                    ConfirmPassword = this.ConfirmPassword
-                };
-                OnPropertyChanged("Username");
-            }
-        }
+		private string username;
+		public string Username
+		{
+			get { return username; }
+			set
+			{
+				username = value;
+				User = new User
+				{
+					Username = username,
+					Password = this.Password,
+					Name = this.Name,
+					Lastname = this.Lastname,
+					ConfirmPassword = this.ConfirmPassword
+				};
+				OnPropertyChanged("Username");
+			}
+		}
 
-        private string password;
-        public string Password
-        {
-            get { return password; }
-            set
-            {
-                password = value;
-                User = new User
-                {
-                    Username = this.Username,
-                    Password = password,
-                    Name = this.Name,
-                    Lastname = this.Lastname,
-                    ConfirmPassword = this.ConfirmPassword
-                };
-                OnPropertyChanged("Password");
-            }
-        }
+		private string password;
+		public string Password
+		{
+			get { return password; }
+			set
+			{
+				password = value;
+				User = new User
+				{
+					Username = this.Username,
+					Password = password,
+					Name = this.Name,
+					Lastname = this.Lastname,
+					ConfirmPassword = this.ConfirmPassword
+				};
+				OnPropertyChanged("Password");
+			}
+		}
 
-        private string name;
-        public string Name
-        {
-            get { return name; }
-            set
-            {
-                name = value;
-                User = new User
-                {
-                    Username = this.Username,
-                    Password = this.Password,
-                    Name = name,
-                    Lastname = this.Lastname,
-                    ConfirmPassword = this.ConfirmPassword
-                };
-                OnPropertyChanged("Name");
-            }
-        }
+		private string name;
+		public string Name
+		{
+			get { return name; }
+			set
+			{
+				name = value;
+				User = new User
+				{
+					Username = this.Username,
+					Password = this.Password,
+					Name = name,
+					Lastname = this.Lastname,
+					ConfirmPassword = this.ConfirmPassword
+				};
+				OnPropertyChanged("Name");
+			}
+		}
 
-        private string lastname;
-        public string Lastname
-        {
-            get { return lastname; }
-            set
-            {
-                lastname = value;
-                User = new User
-                {
-                    Username = this.Username,
-                    Password = this.Password,
-                    Name = this.Name,
-                    Lastname = lastname,
-                    ConfirmPassword = this.ConfirmPassword
-                };
-                OnPropertyChanged("Lastame");
-            }
-        }
+		private string lastname;
+		public string Lastname
+		{
+			get { return lastname; }
+			set
+			{
+				lastname = value;
+				User = new User
+				{
+					Username = this.Username,
+					Password = this.Password,
+					Name = this.Name,
+					Lastname = lastname,
+					ConfirmPassword = this.ConfirmPassword
+				};
+				OnPropertyChanged("Lastname");
+			}
+		}
 
-        private string confirmPassword;
-        public string ConfirmPassword
-        {
-            get { return confirmPassword; }
-            set
-            {
-                confirmPassword = value;
-                User = new User
-                {
-                    Username = this.Username,
-                    Password = this.Password,
-                    Name = this.Name,
-                    Lastname = this.Lastname,
-                    ConfirmPassword = confirmPassword
-                };
-                OnPropertyChanged("ConfirmPassword");
-            }
-        }
+		private string confirmPassword;
+		public string ConfirmPassword
+		{
+			get { return confirmPassword; }
+			set
+			{
+				confirmPassword = value;
+				User = new User
+				{
+					Username = this.Username,
+					Password = this.Password,
+					Name = this.Name,
+					Lastname = this.Lastname,
+					ConfirmPassword = confirmPassword
+				};
+				OnPropertyChanged("ConfirmPassword");
+			}
+		}
 
-        private Visibility loginVis;
-        public Visibility LoginVis
-        {
-            get { return loginVis; }
-            set
-            {
-                loginVis = value;
-                OnPropertyChanged("LoginVis");
-            }
-        }
+		private Visibility loginVis;
+		public Visibility LoginVis
+		{
+			get { return loginVis; }
+			set
+			{
+				loginVis = value;
+				OnPropertyChanged("LoginVis");
+			}
+		}
 
-        private Visibility registerVis;
-        public Visibility RegisterVis
-        {
-            get { return registerVis; }
-            set
-            {
-                registerVis = value;
-                OnPropertyChanged("RegisterVis");
-            }
-        }
+		private Visibility registerVis;
+		public Visibility RegisterVis
+		{
+			get { return registerVis; }
+			set
+			{
+				registerVis = value;
+				OnPropertyChanged("RegisterVis");
+			}
+		}
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public event EventHandler Authenticated;
-        public RegisterCommand RegisterCommand { get; set; }
-        public LoginCommand LoginCommand { get; set; }
-        public ShowRegisterCommand ShowRegisterCommand { get; set; }
+		public event PropertyChangedEventHandler PropertyChanged;
+		public event EventHandler Authenticated;
 
-        public LoginVM()
-        {
-            LoginVis = Visibility.Visible;
-            RegisterVis = Visibility.Collapsed;
+		public RegisterCommand RegisterCommand { get; set; }
+		public LoginCommand LoginCommand { get; set; }
+		public ShowRegisterCommand ShowRegisterCommand { get; set; }
 
-            RegisterCommand = new RegisterCommand(this);
-            LoginCommand = new LoginCommand(this);
-            ShowRegisterCommand = new ShowRegisterCommand(this);
+		public LoginVM()
+		{
+			LoginVis = Visibility.Visible;
+			RegisterVis = Visibility.Collapsed;
 
-            User = new User();
-        }
+			RegisterCommand = new RegisterCommand(this);
+			LoginCommand = new LoginCommand(this);
+			ShowRegisterCommand = new ShowRegisterCommand(this);
 
-        public void SwitchViews()
-        {
-            isShowingRegister = !isShowingRegister;
+			User = new User();
+		}
 
-            if(isShowingRegister)
-            {
-                RegisterVis = Visibility.Visible;
-                LoginVis = Visibility.Collapsed;
-            }
-            else
-            {
-                RegisterVis = Visibility.Collapsed;
-                LoginVis = Visibility.Visible;
-            }
-        }
+		public void SwitchViews()
+		{
+			isShowingRegister = !isShowingRegister;
 
-        public async void Login()
-        {
-            bool result = await FirebaseAuthHelper.Login(User);
-            
-            if(result)
-            {
-                Authenticated?.Invoke(this, new EventArgs());
-            }
-        }
+			if (isShowingRegister)
+			{
+				RegisterVis = Visibility.Visible;
+				LoginVis = Visibility.Collapsed;
+			}
+			else
+			{
+				RegisterVis = Visibility.Collapsed;
+				LoginVis = Visibility.Visible;
+			}
+		}
 
-        public async void Register()
-        {
-           bool result = await FirebaseAuthHelper.Register(User);
+		public async void Login()
+		{
+			bool result = await FirebaseAuthHelper.Login(User);
 
-            if(result)
-            {
-                Authenticated?.Invoke(this, new EventArgs());
-            }
-        }
+			if (result)
+			{
+				Authenticated?.Invoke(this, new EventArgs());
+			}
+		}
 
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
+		public async void Register()
+		{
+			bool result = await FirebaseAuthHelper.Register(User);
+
+			if (result)
+			{
+				Authenticated?.Invoke(this, new EventArgs());
+			}
+		}
+
+		private void OnPropertyChanged(string propertyName)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
 }

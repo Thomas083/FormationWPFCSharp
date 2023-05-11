@@ -20,8 +20,8 @@ namespace EvernoteClone.ViewModel
 		public Notebook SelectedNotebook
 		{
 			get { return selectedNotebook; }
-			set 
-			{ 
+			set
+			{
 				selectedNotebook = value;
 				OnPropertyChanged("SelectedNotebook");
 				GetNotes();
@@ -33,8 +33,8 @@ namespace EvernoteClone.ViewModel
 		public Note SelectedNote
 		{
 			get { return selectedNote; }
-			set 
-			{ 
+			set
+			{
 				selectedNote = value;
 				OnPropertyChanged("SelectedNote");
 				SelectedNoteChanged?.Invoke(this, new EventArgs());
@@ -42,13 +42,12 @@ namespace EvernoteClone.ViewModel
 		}
 
 		private Visibility isVisible;
-
 		public Visibility IsVisible
 		{
 			get { return isVisible; }
-			set 
-			{ 
-				isVisible = value; 
+			set
+			{
+				isVisible = value;
 				OnPropertyChanged("IsVisible");
 			}
 		}
@@ -61,10 +60,10 @@ namespace EvernoteClone.ViewModel
 		public event PropertyChangedEventHandler PropertyChanged;
 		public event EventHandler SelectedNoteChanged;
 
-        public NotesVM()
+		public NotesVM()
 		{
-			NewNotebookCommand = new NewNotebookCommand(this);
 			NewNoteCommand = new NewNoteCommand(this);
+			NewNotebookCommand = new NewNotebookCommand(this);
 			EditCommand = new EditCommand(this);
 			EndEditingCommand = new EndEditingCommand(this);
 
@@ -78,11 +77,12 @@ namespace EvernoteClone.ViewModel
 
 		public void CreateNotebook()
 		{
-			Notebook newNotebook = new Notebook()
+			Notebook newNotebook = new Notebook
 			{
-				Name = "New notebook",
+				Name = "Notebook",
 				UserId = App.UserId
 			};
+
 			DatabaseHelper.Insert(newNotebook);
 
 			GetNotebooks();
@@ -90,7 +90,7 @@ namespace EvernoteClone.ViewModel
 
 		public void CreateNote(int notebookId)
 		{
-			Note newNote = new Note()
+			Note newNote = new Note
 			{
 				NotebookId = notebookId,
 				CreatedAt = DateTime.Now,
@@ -99,15 +99,16 @@ namespace EvernoteClone.ViewModel
 			};
 
 			DatabaseHelper.Insert(newNote);
+
 			GetNotes();
 		}
 
 		public void GetNotebooks()
 		{
-			var notesbooks = DatabaseHelper.Read<Notebook>().Where(n => n.UserId == App.UserId).ToList();
+			var notebooks = DatabaseHelper.Read<Notebook>().Where(n => n.UserId == App.UserId).ToList();
 
 			Notebooks.Clear();
-			foreach (var notebook in notesbooks)
+			foreach (var notebook in notebooks)
 			{
 				Notebooks.Add(notebook);
 			}
@@ -115,12 +116,12 @@ namespace EvernoteClone.ViewModel
 
 		private void GetNotes()
 		{
-			if(SelectedNotebook != null)
+			if (SelectedNotebook != null)
 			{
 				var notes = DatabaseHelper.Read<Note>().Where(n => n.NotebookId == SelectedNotebook.Id).ToList();
 
 				Notes.Clear();
-				foreach(var note in notes)
+				foreach (var note in notes)
 				{
 					Notes.Add(note);
 				}
@@ -136,7 +137,7 @@ namespace EvernoteClone.ViewModel
 		{
 			IsVisible = Visibility.Visible;
 		}
-		
+
 		public void StopEditing(Notebook notebook)
 		{
 			IsVisible = Visibility.Collapsed;

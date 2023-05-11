@@ -9,23 +9,23 @@ namespace EvernoteClone.ViewModel.Commands
 {
 	public class NewNotebookCommand : ICommand
 	{
-		public NotesVM VM { get; set; }
+        public NotesVM ViewModel { get; set; }
 
-		public NewNotebookCommand(NotesVM vm)
-		{
-			VM = vm;
-		}
+        public event EventHandler CanExecuteChanged;
 
-		public event EventHandler? CanExecuteChanged;
+        public NewNotebookCommand(NotesVM vm)
+        {
+            ViewModel = vm;
+        }
 
-		public bool CanExecute(object? parameter)
-		{
-			return true;
-		}
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
 
-		public void Execute(object? parameter)
-		{
-			VM.CreateNotebook();
-		}
-	}
+        public void Execute(object parameter)
+        {
+            ViewModel.CreateNotebook();
+        }
+    }
 }

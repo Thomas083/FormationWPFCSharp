@@ -18,7 +18,7 @@ namespace EvernoteClone.ViewModel.Helpers
 
 		public static async Task<bool> Register(User user)
 		{
-			using(HttpClient client = new HttpClient())
+			using (HttpClient client = new HttpClient())
 			{
 				var body = new
 				{
@@ -27,19 +27,19 @@ namespace EvernoteClone.ViewModel.Helpers
 					returnSecureToken = true
 				};
 
-				var bodyJson = JsonConvert.SerializeObject(body);
+				string bodyJson = JsonConvert.SerializeObject(body);
 				var data = new StringContent(bodyJson, Encoding.UTF8, "application/json");
 
 				var response = await client.PostAsync($"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={api_key}", data);
 
-				if(response.IsSuccessStatusCode)
+				if (response.IsSuccessStatusCode)
 				{
 					string resultJson = await response.Content.ReadAsStringAsync();
 					var result = JsonConvert.DeserializeObject<FirebaseResult>(resultJson);
 					App.UserId = result.localId;
 
 					return true;
-				} 
+				}
 				else
 				{
 					string errorJson = await response.Content.ReadAsStringAsync();
@@ -50,6 +50,7 @@ namespace EvernoteClone.ViewModel.Helpers
 				}
 			}
 		}
+
 		public static async Task<bool> Login(User user)
 		{
 			using (HttpClient client = new HttpClient())
@@ -61,7 +62,7 @@ namespace EvernoteClone.ViewModel.Helpers
 					returnSecureToken = true
 				};
 
-				var bodyJson = JsonConvert.SerializeObject(body);
+				string bodyJson = JsonConvert.SerializeObject(body);
 				var data = new StringContent(bodyJson, Encoding.UTF8, "application/json");
 
 				var response = await client.PostAsync($"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={api_key}", data);
@@ -84,6 +85,7 @@ namespace EvernoteClone.ViewModel.Helpers
 				}
 			}
 		}
+
 		public class FirebaseResult
 		{
 			public string kind { get; set; }
@@ -93,6 +95,7 @@ namespace EvernoteClone.ViewModel.Helpers
 			public string expiresIn { get; set; }
 			public string localId { get; set; }
 		}
+
 		public class ErrorDetails
 		{
 			public int code { get; set; }

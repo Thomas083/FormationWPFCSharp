@@ -10,8 +10,11 @@
         mc:Ignorable="d"
         Title="NotesWindow" Height="450" Width="800">
     <Window.Resources>
-        <vm:NotesVM x:Key="vm"/>
+        <ResourceDictionary>
+            <vm:NotesVM x:Key="vm"/>
+        </ResourceDictionary>
     </Window.Resources>
+
     <DockPanel DataContext="{StaticResource vm}">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
@@ -27,7 +30,7 @@
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock x:Name="statusTextblock"/>
+                <TextBlock x:Name="statusTextBlock"/>
             </StatusBarItem>
         </StatusBar>
         <ListView DockPanel.Dock="Left"
@@ -37,7 +40,7 @@
                   ItemsSource="{Binding Notebooks}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid>                        
+                    <Grid>
                         <uc:DisplayNotebook Notebook="{Binding}">
                             <uc:DisplayNotebook.ContextMenu>
                                 <ContextMenu>
@@ -46,7 +49,7 @@
                                 </ContextMenu>
                             </uc:DisplayNotebook.ContextMenu>
                         </uc:DisplayNotebook>
-                        <TextBox Text="{Binding Name}"             
+                        <TextBox Text="{Binding Name, Mode=TwoWay}"
                                  Visibility="{Binding Source={StaticResource vm}, Path=IsVisible}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="LostFocus">
@@ -57,7 +60,7 @@
                         </TextBox>
                     </Grid>
                 </DataTemplate>
-            </ListView.ItemTemplate>            
+            </ListView.ItemTemplate>
         </ListView>
         <ListView DockPanel.Dock="Left"
                   Width="140"
@@ -68,14 +71,13 @@
                     <uc:DisplayNote Note="{Binding}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
-            
         </ListView>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
                 <Button Content="Speech"
-                        Click="SpeechButton_Click"/>
+                        Click="speechButton_Click"/>
                 <ToggleButton x:Name="boldButton"
-                         Click="boldButton_Click">
+                              Click="boldButton_Click">
                     <TextBlock Text="B"
                                FontWeight="Bold"/>
                 </ToggleButton>
@@ -92,19 +94,18 @@
                 <ComboBox x:Name="fontFamilyComboBox"
                           Width="100"
                           SelectionChanged="fontFamilyComboBox_SelectionChanged"/>
-                <ComboBox x:Name="fontSizeCombobox"
+                <ComboBox x:Name="fontSizeComboBox"
                           Width="50"
                           IsEditable="True"
-                          TextBoxBase.TextChanged="fontSizeCombobox_TextChanged"/>
+                          TextBoxBase.TextChanged="fontSizeComboBox_TextChanged"/>
                 <Button Content="Save"
                         Click="Button_Click"/>
-
             </ToolBar>
         </ToolBarTray>
         <Grid>
-            <RichTextBox x:Name="contentRichTexBox"
-                         TextChanged="contentRichTexBox_TextChanged"
-                         SelectionChanged="contentRichTexBox_SelectionChanged"/>
+            <RichTextBox x:Name="contentRichTextBox"
+                         TextChanged="contentRichTextBox_TextChanged"
+                         SelectionChanged="contentRichTextBox_SelectionChanged"/>
         </Grid>
     </DockPanel>
 </Window>

@@ -19,160 +19,148 @@ namespace EvernoteClone.View
 	/// </summary>
 	public partial class NotesWindow : Window
 	{
-		NotesVM viewModel;
-		public NotesWindow()
-		{
-			InitializeComponent();
+        NotesVM viewModel;
 
-			viewModel = Resources["vm"] as NotesVM;
-			viewModel.SelectedNoteChanged += ViewModel_SelectedNoteChanged;
+        public NotesWindow()
+        {
+            InitializeComponent();
 
-			var fontFamilies = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
-			fontFamilyComboBox.ItemsSource = fontFamilies;
+            viewModel = Resources["vm"] as NotesVM;
+            viewModel.SelectedNoteChanged += ViewModel_SelectedNoteChanged;
 
-			List<double> fontSizes = new List<double>()
-			{
-				8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 48, 72
-			};
+            var fontFamilies = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
+            fontFamilyComboBox.ItemsSource = fontFamilies;
 
-			fontSizeCombobox.ItemsSource = fontSizes;
-		}
-
-		protected override void OnActivated(EventArgs e)
-		{
-			base.OnActivated(e);
-
-			if(string.IsNullOrEmpty(App.UserId))
-			{
-				LoginWindow loginWindow = new LoginWindow();
-				loginWindow.Show();
-
-				viewModel.GetNotebooks();
-			}
-		}
-
-		private void ViewModel_SelectedNoteChanged(object? sender, EventArgs e)
-		{
-			contentRichTexBox.Document.Blocks.Clear();
-			if(viewModel.SelectedNote != null)
-			{
-				if(!string.IsNullOrEmpty(viewModel.SelectedNote.FileLocation))
-				{
-					FileStream fileStream = new FileStream(viewModel.SelectedNote.FileLocation, FileMode.Open);
-					var contents = new TextRange(contentRichTexBox.Document.ContentStart, contentRichTexBox.Document.ContentEnd);
-					contents.Load(fileStream, DataFormats.Rtf);
-				}
-			}
-		}
-
-		private void MenuItem_Click(object sender, RoutedEventArgs e)
-		{
-			Application.Current.Shutdown();
+            List<double> fontSizes = new List<double> { 8, 9, 10, 11, 12, 14, 16, 28, 48, 72 };
+            fontSizeComboBox.ItemsSource = fontSizes;
         }
 
-        private async void SpeechButton_Click(object sender, RoutedEventArgs e)
+        protected override void OnActivated(EventArgs e)
         {
-			string region = "francecentral";
-			string key = "748a880044b0469fb33b505aa39d5c36";
+            base.OnActivated(e);
 
-			var speechConfig = SpeechConfig.FromSubscription(key, region);
-			using(var audioConfig = AudioConfig.FromDefaultSpeakerOutput())
-			{
-				using (var recognizer = new SpeechRecognizer(speechConfig, audioConfig))
-				{
-					var result = await recognizer.RecognizeOnceAsync();
-					contentRichTexBox.Document.Blocks.Add(new Paragraph(new Run(result.Text)));
-				}
-			}
+            if (string.IsNullOrEmpty(App.UserId))
+            {
+                LoginWindow loginWindow = new LoginWindow();
+                loginWindow.ShowDialog();
+
+                viewModel.GetNotebooks();
+            }
         }
 
-        private void contentRichTexBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void ViewModel_SelectedNoteChanged(object sender, EventArgs e)
         {
-			int ammountCharacters = (new TextRange(contentRichTexBox.Document.ContentStart, contentRichTexBox.Document.ContentEnd)).Text.Length;
-			statusTextblock.Text = $"Document length: {ammountCharacters} character";
+            contentRichTextBox.Document.Blocks.Clear();
+            if (viewModel.SelectedNote != null)
+            {
+                if (!string.IsNullOrEmpty(viewModel.SelectedNote.FileLocation))
+                {
+                    FileStream fileStream = new FileStream(viewModel.SelectedNote.FileLocation, FileMode.Open);
+                    var contents = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
+                    contents.Load(fileStream, DataFormats.Rtf);
+                }
+            }
+        }
 
-		}
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private async void speechButton_Click(object sender, RoutedEventArgs e)
+        {
+            string region = "westus";
+            string key = "4e1418a74a6a457e83faabc6451fe62d";
+
+            var speechConfig = SpeechConfig.FromSubscription(key, region);
+            using (var audioConfig = AudioConfig.FromDefaultMicrophoneInput())
+            {
+                using (var recognizer = new SpeechRecognizer(speechConfig, audioConfig))
+                {
+                    var result = await recognizer.RecognizeOnceAsync();
+                    contentRichTextBox.Document.Blocks.Add(new Paragraph(new Run(result.Text)));
+                }
+            }
+        }
+
+        private void contentRichTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int amountOfCharacters = (new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd)).Text.Length;
+            statusTextBlock.Text = $"Document length: {amountOfCharacters} characters.";
+        }
 
         private void boldButton_Click(object sender, RoutedEventArgs e)
         {
-			bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
-			if(isButtonChecked)
-			{
-				contentRichTexBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Bold);
-			} else
-			{
-				contentRichTexBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Normal);
-			}
+            bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
+
+            if (isButtonChecked)
+                contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Bold);
+            else
+                contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Normal);
+
         }
 
+        private void contentRichTextBox_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            var selectedWeight = contentRichTextBox.Selection.GetPropertyValue(FontWeightProperty);
+            boldButton.IsChecked = (selectedWeight != DependencyProperty.UnsetValue) && (selectedWeight.Equals(FontWeights.Bold));
 
-		private void italicButton_Click(object sender, RoutedEventArgs e)
-		{
-			bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
-			if (isButtonChecked)
-			{
-				contentRichTexBox.Selection.ApplyPropertyValue(Inline.FontStyleProperty, FontStyles.Italic);
-			}
-			else
-			{
-				contentRichTexBox.Selection.ApplyPropertyValue(Inline.FontStyleProperty, FontStyles.Normal);
-			}
-		}
+            var selectedStyle = contentRichTextBox.Selection.GetPropertyValue(FontStyleProperty);
+            italicButton.IsChecked = (selectedStyle != DependencyProperty.UnsetValue) && (selectedStyle.Equals(FontStyles.Italic));
 
-		private void underlineButton_Click(object sender, RoutedEventArgs e)
-		{
-			bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
-			if (isButtonChecked)
-			{
-				contentRichTexBox.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, TextDecorations.Underline);
-			}
-			else
-			{
-				TextDecorationCollection textDecorations;
-				(contentRichTexBox.Selection.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection)
-					.TryRemove(TextDecorations.Underline, out textDecorations);
-				contentRichTexBox.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
-			}
-		}
+            var selectedDecoration = contentRichTextBox.Selection.GetPropertyValue(Inline.TextDecorationsProperty);
+            underlineButton.IsChecked = (selectedDecoration != DependencyProperty.UnsetValue) && selectedDecoration.Equals(TextDecorations.Underline);
 
-		private void fontFamilyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			if(fontFamilyComboBox.SelectedItem!= null)
-			{
-				contentRichTexBox.Selection.ApplyPropertyValue(Inline.FontFamilyProperty, fontFamilyComboBox.SelectedItem);
-			}
-		}
+            fontFamilyComboBox.SelectedItem = contentRichTextBox.Selection.GetPropertyValue(Inline.FontFamilyProperty);
+            fontSizeComboBox.Text = contentRichTextBox.Selection.GetPropertyValue(Inline.FontSizeProperty).ToString();
+        }
 
-		private void fontSizeCombobox_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			contentRichTexBox.Selection.ApplyPropertyValue(Inline.FontSizeProperty, fontSizeCombobox.Text);
-		}
+        private void italicButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
 
-		private void contentRichTexBox_SelectionChanged(object sender, RoutedEventArgs e)
-		{
-			var selectedWeight = contentRichTexBox.Selection.GetPropertyValue(Inline.FontWeightProperty);
-			boldButton.IsChecked = (selectedWeight != DependencyProperty.UnsetValue) && (selectedWeight.Equals(FontWeights.Bold));
+            if (isButtonChecked)
+                contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontStyleProperty, FontStyles.Italic);
+            else
+                contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontStyleProperty, FontStyles.Normal);
+        }
 
-			var selectedStyle = contentRichTexBox.Selection.GetPropertyValue(Inline.FontStyleProperty);
-			italicButton.IsChecked = (selectedStyle != DependencyProperty.UnsetValue) && (selectedStyle.Equals(FontStyles.Italic));
+        private void underlineButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
 
-			var selectedDecoration = contentRichTexBox.Selection.GetPropertyValue(Inline.TextDecorationsProperty);
-			underlineButton.IsChecked = (selectedDecoration != DependencyProperty.UnsetValue) && (selectedDecoration.Equals(TextDecorations.Underline));
+            if (isButtonChecked)
+                contentRichTextBox.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, TextDecorations.Underline);
+            else
+            {
+                TextDecorationCollection textDecorations;
+                (contentRichTextBox.Selection.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection).TryRemove(TextDecorations.Underline, out textDecorations);
+                contentRichTextBox.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
+            }
+        }
 
-			fontFamilyComboBox.SelectedItem = contentRichTexBox.Selection.GetPropertyValue(Inline.FontFamilyProperty);
-			fontSizeCombobox.Text = (contentRichTexBox.Selection.GetPropertyValue(Inline.FontSizeProperty)).ToString();
-		}
+        private void fontFamilyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (fontFamilyComboBox.SelectedItem != null)
+            {
+                contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontFamilyProperty, fontFamilyComboBox.SelectedItem);
+            }
+        }
 
-		private void Button_Click(object sender, RoutedEventArgs e)
-		{
-			string rtfFile = Path.Combine(Environment.CurrentDirectory, $"{viewModel.SelectedNote.Id}.rtf");
-			viewModel.SelectedNote.FileLocation = rtfFile;
-			DatabaseHelper.Update(viewModel.SelectedNote);
+        private void fontSizeComboBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontSizeProperty, fontSizeComboBox.Text);
+        }
 
-			FileStream fileStream = new FileStream(rtfFile, FileMode.Create);
-			var contents = new TextRange(contentRichTexBox.Document.ContentStart, contentRichTexBox.Document.ContentEnd);
-			contents.Save(fileStream, DataFormats.Rtf);
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, $"{viewModel.SelectedNote.Id}.rtf");
+            viewModel.SelectedNote.FileLocation = rtfFile;
+            DatabaseHelper.Update(viewModel.SelectedNote);
 
-		}
-	}
+            FileStream fileStream = new FileStream(rtfFile, FileMode.Create);
+            var contents = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
+            contents.Save(fileStream, DataFormats.Rtf);
+        }
+    }
 }
