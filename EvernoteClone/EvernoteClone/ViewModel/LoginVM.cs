@@ -38,7 +38,7 @@ namespace EvernoteClone.ViewModel
                     Username = username,
                     Password = this.Password,
                     Name = this.Name,
-                    Lastname = this.Lastame,
+                    Lastname = this.Lastname,
                     ConfirmPassword = this.ConfirmPassword
                 };
                 OnPropertyChanged("Username");
@@ -57,7 +57,7 @@ namespace EvernoteClone.ViewModel
                     Username = this.Username,
                     Password = password,
                     Name = this.Name,
-                    Lastname = this.Lastame,
+                    Lastname = this.Lastname,
                     ConfirmPassword = this.ConfirmPassword
                 };
                 OnPropertyChanged("Password");
@@ -76,7 +76,7 @@ namespace EvernoteClone.ViewModel
                     Username = this.Username,
                     Password = this.Password,
                     Name = name,
-                    Lastname = this.Lastame,
+                    Lastname = this.Lastname,
                     ConfirmPassword = this.ConfirmPassword
                 };
                 OnPropertyChanged("Name");
@@ -84,7 +84,7 @@ namespace EvernoteClone.ViewModel
         }
 
         private string lastname;
-        public string Lastame
+        public string Lastname
         {
             get { return lastname; }
             set
@@ -114,7 +114,7 @@ namespace EvernoteClone.ViewModel
                     Username = this.Username,
                     Password = this.Password,
                     Name = this.Name,
-                    Lastname = this.Lastame,
+                    Lastname = this.Lastname,
                     ConfirmPassword = confirmPassword
                 };
                 OnPropertyChanged("ConfirmPassword");
@@ -144,7 +144,7 @@ namespace EvernoteClone.ViewModel
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
+        public event EventHandler Authenticated;
         public RegisterCommand RegisterCommand { get; set; }
         public LoginCommand LoginCommand { get; set; }
         public ShowRegisterCommand ShowRegisterCommand { get; set; }
@@ -177,14 +177,24 @@ namespace EvernoteClone.ViewModel
             }
         }
 
-        public void Login()
+        public async void Login()
         {
-            // TODO: login
+            bool result = await FirebaseAuthHelper.Login(User);
+            
+            if(result)
+            {
+                Authenticated?.Invoke(this, new EventArgs());
+            }
         }
 
         public async void Register()
         {
-            await FirebaseAuthHelper.Register(User);
+           bool result = await FirebaseAuthHelper.Register(User);
+
+            if(result)
+            {
+                Authenticated?.Invoke(this, new EventArgs());
+            }
         }
 
         private void OnPropertyChanged(string propertyName)
