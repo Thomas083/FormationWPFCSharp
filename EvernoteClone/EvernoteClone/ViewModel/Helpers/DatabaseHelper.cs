@@ -1,8 +1,10 @@
-﻿using SQLite;
+﻿using Newtonsoft.Json;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,10 +13,11 @@ namespace EvernoteClone.ViewModel.Helpers
 	public class DatabaseHelper
 	{
 		private static string dbFile = Path.Combine(Environment.CurrentDirectory, "notesDb.db3");
+		private static string dbPath = System.Environment.GetEnvironmentVariable("DB_PATH");
 
-		public static bool Insert<T>(T item)
+		public static async Task<bool> Insert<T>(T item)
 		{
-			bool result = false;
+			/*bool result = false;
 
 			using (SQLiteConnection conn = new SQLiteConnection(dbFile))
 			{
@@ -24,7 +27,20 @@ namespace EvernoteClone.ViewModel.Helpers
 					result = true;
 			}
 
-			return result;
+			return result;*/
+			string jsonBody = JsonConvert.SerializeObject(item);
+			var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+			using(var client = new HttpClient())
+			{
+				var result = await client.PostAsync($"{dbPath}{item.GetType().Name.ToLower()}.json", content);
+
+				if(result.IsSuccessStatusCode)
+				{
+					return true;
+				}
+				return false;
+			}
 		}
 
 		public static bool Update<T>(T item)

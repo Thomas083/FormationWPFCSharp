@@ -3,7 +3,8 @@
     "EvernoteClone": {
       "commandName": "Project",
       "environmentVariables": {
-        "API_KEY": "Firebase Api KEy"
+        "API_KEY": "Firebase Api KEy",
+        "DB_PATH": "path to your database"
       }
     }
   }
