@@ -45,9 +45,9 @@ namespace EvernoteClone.ViewModel.Helpers
 			}
 		}
 
-		public static bool Update<T>(T item)
+		public static async Task<bool> Update<T>(T item) where T : HasId
 		{
-			bool result = false;
+			/*bool result = false;
 
 			using (SQLiteConnection conn = new SQLiteConnection(dbFile))
 			{
@@ -57,7 +57,21 @@ namespace EvernoteClone.ViewModel.Helpers
 					result = true;
 			}
 
-			return result;
+			return result;*/
+
+			string jsonBody = JsonConvert.SerializeObject(item);
+			var content = new StringContent(jsonBody, Encoding .UTF8, "application/json");
+
+			using(var client = new HttpClient())
+			{
+				var result = await client.PatchAsync($"{dbPath}{item.GetType().Name.ToLower()}/{item.Id}.json", content);
+
+				if(result.IsSuccessStatusCode)
+				{
+					return true;
+				}
+				return false;
+			}
 		}
 
 		public static bool Delete<T>(T item)
