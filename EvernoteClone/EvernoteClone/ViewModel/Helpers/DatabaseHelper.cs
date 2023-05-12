@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using EvernoteClone.Model;
+using Newtonsoft.Json;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Automation.Peers;
 
 namespace EvernoteClone.ViewModel.Helpers
 {
@@ -73,9 +75,9 @@ namespace EvernoteClone.ViewModel.Helpers
 			return result;
 		}
 
-		public static List<T> Read<T>() where T : new()
+		public static async Task<List<T>> Read<T>() where T : HasId
 		{
-			List<T> items;
+			/*List<T> items;
 
 			using (SQLiteConnection conn = new SQLiteConnection(dbFile))
 			{
@@ -83,7 +85,30 @@ namespace EvernoteClone.ViewModel.Helpers
 				items = conn.Table<T>().ToList();
 			}
 
-			return items;
+			return items;*/
+			using (var client = new HttpClient())
+			{
+				var result = await client.GetAsync($"{dbPath}{typeof(T).Name.ToLower()}.json");
+				var jsonResult = await result.Content.ReadAsStringAsync();
+
+				if (result.IsSuccessStatusCode && jsonResult != "null")
+				{
+					var objects = JsonConvert.DeserializeObject<Dictionary<string, T>>(jsonResult);
+
+					List<T> list = new List<T>();
+					foreach (var o in objects)
+					{
+						o.Value.Id = o.Key;
+						list.Add(o.Value);
+					}
+
+					return list;
+				}
+				else
+				{
+					return null;
+				}
+			}
 		}
 	}
 }
