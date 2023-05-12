@@ -74,9 +74,9 @@ namespace EvernoteClone.ViewModel.Helpers
 			}
 		}
 
-		public static bool Delete<T>(T item)
+		public static async Task<bool> Delete<T>(T item) where T : HasId
 		{
-			bool result = false;
+			/*bool result = false;
 
 			using (SQLiteConnection conn = new SQLiteConnection(dbFile))
 			{
@@ -86,7 +86,18 @@ namespace EvernoteClone.ViewModel.Helpers
 					result = true;
 			}
 
-			return result;
+			return result;*/
+
+			using (var client = new HttpClient())
+			{
+				var result = await client.DeleteAsync($"{dbPath}{item.GetType().Name.ToLower()}/{item.Id}.json");
+
+				if (result.IsSuccessStatusCode)
+				{
+					return true;
+				}
+				return false;
+			}
 		}
 
 		public static async Task<List<T>> Read<T>() where T : HasId
