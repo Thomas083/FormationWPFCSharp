@@ -4,7 +4,9 @@
       "commandName": "Project",
       "environmentVariables": {
         "API_KEY": "Firebase Api KEy",
-        "DB_PATH": "path to your database"
+        "DB_PATH": "path to your database",
+        "CONNECTION_STRING": "Connection string to storage account",
+        "CONTAINER_NAME": "Name of your container"
       }
     }
   }
